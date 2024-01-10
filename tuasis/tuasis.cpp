@@ -2,12 +2,14 @@
 #include <iostream>
 #include"student.h"
 #include"courses.h"
+#include"enrolstudent.h"
 #include<vector>
 using namespace std;
 int x;
 vector<student>studentlist;
 vector<courses>courselist;
 vector<subject>subjectlist;
+vector<enrolstudent>enrollist;
 bool checkstudentid(string id)
 {
     bool flag = false;
@@ -66,6 +68,19 @@ bool checksubjectid(string id)
     for (x = 0; x < subjectlist.size(); x++)
     {
         if (id == subjectlist[x].getsubjectid())
+        {
+            flag = true;
+            break;
+        }
+    }
+    return flag;
+}
+bool checkenrolid(string id)
+{
+    bool flag = false;
+    for (x = 0; x < enrollist.size(); x++)
+    {
+        if (id == enrollist[x].getenrolid())
         {
             flag = true;
             break;
@@ -260,6 +275,90 @@ void addsubject()
     subject obj(subjectid, subjectname, subjectdescription);
     subjectlist.push_back(obj);
     cout << "Subject successfully added " << endl;
+}
+void enrol()
+{
+    string eid, ed, et;
+    string sid, cid;
+    while (true)
+    {
+        cout << "Enter the id for the enrollment " << endl;
+        getline(cin, eid);
+        if (eid == "")
+        {
+            cout << "Sorry the enrollment id u entered is blank,pls enter a valid enrollment id " << endl;
+        }
+        else if (checkenrolid(eid) == true)
+        {
+            cout << "Sorry the id u entered is already in the database,pls enter a new id " << endl;
+        }
+        else
+        {
+            break;
+        }
+    }
+    while (true)
+    {
+        cout << "Enter the date of enrollment " << endl;
+        getline(cin, ed);
+        if (ed == "")
+        {
+            cout << "Sorry the enrollment date u entered cant be blank,pls enter a valid date" << endl;
+        }
+        else
+        {
+            break;
+        }
+    }
+    while (true)
+    {
+        cout << "Enter the time of the enrollment " << endl;
+        getline(cin, et);
+        if (et == "")
+        {
+            cout << "Sorry the time cant be blank,pls enter a valid enrollment time" << endl;
+        }
+        else
+        {
+            break;
+        }
+    }
+    cout << "Enter the id of the student which u wanna enrol in the course" << endl;
+    getline(cin, sid);
+    bool a = false;
+    int idx1, idx2;
+    for (x = 0; x < studentlist.size(); x++)
+    {
+        if (studentlist[x].getid() == sid)
+        {
+            idx1 = x;
+            a = true;
+            break;
+        }
+    }
+    if (a == false)
+    {
+        cout << "Sorry the id entered is not in the database,pls enter a valid student id " << endl;
+    }
+    cout << "Enter the id of the course in which the student wants to get enrolled " << endl;
+    getline(cin, cid);
+    bool b = false;
+    for (x = 0; x < courselist.size(); x++)
+    {
+        if (cid == courselist[x].getcourseid())
+        {
+            idx2 = x;
+            b = true;
+            break;
+        }
+    }
+    if (b == false)
+    {
+        cout << "Sorry the id entered is not in the database,pls enter a valid id " << endl;
+    }
+    enrolstudent obj(studentlist[idx1], courselist[idx2], eid, ed, et);
+    enrollist.push_back(obj);
+    cout << "Student successfully enrolled in the course,Thank u for using SIS" << endl;
 }
 
 int main()
