@@ -38,52 +38,15 @@ void enrolstudent::setenroltime(string enroltime)
 {
 	this->enroltime = enroltime;
 }
+student enrolstudent::getstudents()
+{
+	return students;
+}
+courses enrolstudent::getcourse()
+{
+	return course;
+}
 
-bool enrolstudent::enstudent(subject obj)
-{
-	int x;
-	bool flag = false;
-	for (x = 0; x < chosensubject.size(); x++)
-	{
-		if (chosensubject[x].getsubjectid() == obj.getsubjectid())
-		{
-			flag = true;
-			break;
-		}
-	}
-	if (flag == true)
-	{
-		return false;
-	}
-	else
-	{
-		chosensubject.push_back(obj);
-		return true;
-	}
-}
-bool enrolstudent::denstudent(subject obj)
-{
-	int x, idx;
-	bool flag = false;
-	for (x = 0; x < chosensubject.size(); x++)
-	{
-		if (chosensubject[x].getsubjectid() == obj.getsubjectid())
-		{
-			idx = x;
-			flag = true;
-			break;
-		}
-	}
-	if (flag == false)
-	{
-		return false;
-	}
-	else
-	{
-		chosensubject.erase(chosensubject.begin() + idx);
-		return true;
-	}
-}
 vector<subject>enrolstudent::getsub()
 {
 	return course.getsubjectlist();

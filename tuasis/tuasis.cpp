@@ -1,15 +1,21 @@
 #include<string>
+#include<numeric>
+#include<stdio.h>
 #include <iostream>
 #include"student.h"
 #include"courses.h"
 #include"enrolstudent.h"
+#include"transcript.h"
 #include<vector>
 using namespace std;
 int x;
+int totalmarks = 0;
 vector<student>studentlist;
 vector<courses>courselist;
 vector<subject>subjectlist;
 vector<enrolstudent>enrollist;
+vector<transcript>transcriptlist;
+vector<float>studentmarks;
 bool checkstudentid(string id)
 {
     bool flag = false;
@@ -88,6 +94,19 @@ bool checkenrolid(string id)
     }
     return flag;
 }
+bool checktranscriptid(string id)
+{
+    bool flag = false;
+    for (x = 0; x < transcriptlist.size(); x++)
+    {
+        if (transcriptlist[x].gettranscriptid() == id)
+        {
+            flag = true;
+            break;
+        }
+    }
+    return flag;
+}
 void addstudent()
 {
     string studentid, studentname, studentemail, studentphno;
@@ -124,11 +143,15 @@ void addstudent()
     }
     while (true)
     {
-        cout << "Enter the email id of the student " << endl;
+        cout << "Enter the phone number of the student " << endl;
         getline(cin, studentphno);
         if (studentphno == "")
         {
             cout << "Sorry the phone number cant be blank,pls enter a valid ph no" << endl;
+        }
+        else if (studentphno.length() != 10)
+        {
+            cout << "Sorry the phone number should be of 10 digits" << endl;
         }
         else if (checkphone(studentphno) == true)
         {
@@ -276,6 +299,52 @@ void addsubject()
     subjectlist.push_back(obj);
     cout << "Subject successfully added " << endl;
 }
+void addsubjectincourse()
+{
+    string cid, sid;
+    int idx1, idx2;
+    cout << "Enter the id of the course which u wanna add in the course" << endl;
+    getline(cin, cid);
+    bool a = false;
+    for (x = 0; x < courselist.size(); x++)
+    {
+        if (courselist[x].getcourseid() == cid)
+        {
+            idx1 = x;
+            a = true;
+            break;
+        }
+    }
+    if (a == false)
+    {
+        cout << "Sorry the id entered is not in the database pls enter a correct id " << endl;
+
+    }
+    else
+    {
+        cout << "Enter the id of the subject which u wanna add in the course " << endl;
+        getline(cin, sid);
+        bool b = false;
+        for (x = 0; x < subjectlist.size(); x++)
+        {
+            if (subjectlist[x].getsubjectid() == sid)
+            {
+                idx2 = x;
+                b = true;
+                break;
+            }
+        }
+        if (b == false)
+        {
+            cout << "Sorry the id u entered is not in the database pls enter a valid id for the subject" << endl;
+        }
+        else
+        {
+            courselist[idx1].addsubject(subjectlist[idx2]);
+            cout << "Subject Successfully added in the course" << endl;
+        }
+    }
+}
 void enrol()
 {
     string eid, ed, et;
@@ -361,7 +430,204 @@ void enrol()
     cout << "Student successfully enrolled in the course,Thank u for using SIS" << endl;
 }
 
+
+void addresults()
+{
+    string tid, sid, cid;
+    int px,kx;
+    float smarks;
+    while (true)
+    {
+        cout << "Enter the transcript id" << endl;
+        getline(cin, tid);
+        if (tid == "")
+        {
+            cout << "Sorry the id entered cant be blank,pls enter a valid transcript id" << endl;
+        }
+        else if (checktranscriptid(tid) == true)
+        {
+            cout << "Sorry the id entered is already in the database,pls enter a valid transcript id" << endl;
+        }
+        else
+        {
+            break;
+        }
+    }
+    cout << "Enter the student id against which u wanna add the results in the transcript" << endl;
+    getline(cin, sid);
+    bool flag = false;
+    for (x = 0; x < studentlist.size(); x++)
+    {
+        if (studentlist[x].getid() == sid)
+        {
+            px = x;
+            flag = true;
+            break;
+        }
+    }
+    if (flag == false)
+    {
+        cout << "Sorry the id entered is not in the list,pls enter a valid id " << endl;
+    }
+    else
+    {
+        cout << "Enter the id of the course " << endl;
+        getline(cin, cid);
+        bool l = false;
+        for (x = 0; x < courselist.size(); x++)
+        {
+            if (courselist[x].getcourseid() == cid)
+            {
+                kx = x;
+                l = true;
+                break;
+            }
+        }
+        if (l == false)
+        {
+            cout << "Sorry the id entered cant be blank,pls enter a valid id" << endl;
+        }
+        else
+        {
+            cout << "Enter the marks of the subjects" << endl;
+            for (x = 0; x < courselist[px].getsubjectlist().size(); x++)
+            {
+                cout << "Enter the marks in subject " << courselist[kx].getsubjectlist()[x].getsubjectname() << endl;
+                cin >> smarks;
+                totalmarks = totalmarks + smarks;
+                studentmarks.push_back(smarks);
+            }
+            transcript obj(tid, studentlist[px], courselist[kx], studentmarks);
+            transcriptlist.push_back(obj);
+            cout << "Results added successfully in the Transcript!!!!" << endl;
+        }
+    }
+}
+void printresult()
+{
+    string getid;
+    float tdivide;
+    float percentage;
+    int idx;
+    string sid;
+    float tmarks=0.0;
+    cout << "Enter the transcript id against which u wanna print the results" << endl;
+    getline(cin, getid);
+    bool flag = false;
+    for (x = 0; x < transcriptlist.size(); x++)
+    {
+        if (getid == transcriptlist[x].gettranscriptid())
+        {
+            idx = x;
+            flag = true;
+            break;
+        }
+    }
+    if (flag == false)
+    {
+        cout << "Sorry the id u entered is not in the list,pls enter a valid id " << endl;
+    }
+    else
+    {
+        
+        sid=transcriptlist[idx].getstudent().getid();
+        cout << "Student Id : " << sid << endl;
+        cout << "Student marks : " << endl;
+        for (x = 0; x < transcriptlist[idx].getcourse().getsubjectlist().size(); x++)
+        {
+            cout << "Marks in " << transcriptlist[idx].getcourse().getsubjectlist()[x].getsubjectname() <<" are : "<<transcriptlist[idx].getmarks()[x]<< endl;
+            tmarks = tmarks + transcriptlist[idx].getmarks()[x];
+        }
+
+        tdivide = transcriptlist[idx].getmarks().size() * 100;
+        percentage = (tmarks / tdivide) * 100;
+        cout << "The Percentage obtained by the student is : " << percentage << endl;
+        if (percentage >= 90)
+        {
+            cout << "The grade of the Student is : A" << endl;
+        }
+        else if (percentage >= 80 && percentage < 90)
+        {
+            cout << "The grade of the Student is: B" << endl;
+        }
+        else if (percentage >= 70 && percentage < 80)
+        {
+            cout << "The grade of the Student is: C" << endl;
+        }
+        else if (percentage >= 60 && percentage < 70)
+        {
+            cout << "The grade of the Student is: D" << endl;
+        }
+        else if (percentage >= 50 && percentage < 60)
+        {
+            cout << "The grade of the Student is: E" << endl;
+        }
+        else
+        {
+            cout << "The grade of the Student is: F" << endl;
+        }
+        
+    }
+}
+    
+    
+
+
 int main()
 {
-    
+    int choice;
+    while (true)
+    {
+        cout << "****WELCOME TO STUDENT INFORMATION SYSTEM****" << endl;
+        cout << "1.Add student in the database" << endl;
+        cout << "2.Add courses in the database" << endl;
+        cout << "3.Add subjects in the database" << endl;
+        cout << "4.Add subjects in the course " << endl;
+        cout << "5.Enrol a student into a course" << endl;
+        cout << "6.Add results in transcript" << endl;
+        cout << "7.Print results in transcript" << endl;
+        cout << "Enter the choice" << endl;
+        cin >> choice;
+        getchar();
+        switch (choice)
+        {
+        case 1:
+        {
+            addstudent();
+            break;
+        }
+        case 2:
+        {
+            addcourse();
+            break;
+
+        }
+        case 3:
+        {
+            addsubject();
+            break;
+        }
+        case 4:
+        {
+            addsubjectincourse();
+            break;
+        }
+        case 5:
+        {
+            enrol();
+            break;
+        }
+        
+        case 6:
+        {
+            addresults();
+            break;
+        }
+        case 7:
+        {
+            printresult();
+            break;
+        }
+        }
+    }
 }

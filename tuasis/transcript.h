@@ -1,22 +1,27 @@
 #pragma once
-#include<iostream>
+
 #include"enrolstudent.h"
 #include<vector>
 #include"subject.h"
-using namespace std;
+
 class transcript
 {
 private:
-	enrolstudent ens;
+	
 	string transcriptid;
 	vector<float>marks;
-	vector<subject>su;
+	student s;
+	courses c;
+
+	
 public:
 	transcript();
-	transcript(string transcriptid,enrolstudent ens);
+	transcript(string transcriptid, student s,courses c, vector<float>marks);
 	string gettranscriptid();
 	void settranscriptid(string transcriptid);
-	bool addmarks(vector<float>marks);
+	student getstudent();
+	vector<float>getmarks();
+	courses getcourse();
 
 };
 

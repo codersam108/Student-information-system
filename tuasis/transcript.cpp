@@ -4,10 +4,12 @@ transcript::transcript()
 	transcriptid = "";
 
 }
-transcript::transcript(string transcriptid, enrolstudent ens)
+transcript::transcript(string transcriptid, student s,courses c,vector<float>marks)
 {
 	this->transcriptid = transcriptid;
-	this->ens = ens;
+	this->s = s;
+	this->c = c;
+	this->marks = marks;
 }
 string transcript::gettranscriptid()
 {
@@ -18,3 +20,15 @@ void transcript::settranscriptid(string transcriptid)
 	this->transcriptid = transcriptid;
 }
 
+vector<float>transcript::getmarks()
+{
+	return marks;
+}
+student transcript::getstudent()
+{
+	return this-> s;
+}
+courses transcript::getcourse()
+{
+	return this->c;
+}
