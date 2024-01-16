@@ -1,0 +1,10 @@
+Transcript id: 40
+Student id for transcript: CO23548
+Course id in which the student is registered: 1
+Student marks: 40
+Student marks: 90
+Transcript id: 40
+Student id for transcript: CO23548
+Course id in which the student is registered: 1
+Student marks: 40
+Student marks: 90

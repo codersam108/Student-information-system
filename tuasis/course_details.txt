@@ -1,0 +1,4 @@
+Course Id: 1
+Course Name: Bachelors in technology
+Course Description: Btech in electronics and communication engineering
+Course Duration: 4 years
